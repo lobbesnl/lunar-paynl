@@ -2,6 +2,7 @@
 
 namespace Lobbesnl\Lunar\Paynl;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Lobbesnl\Lunar\Paynl\Facades\PaynlFacade;
 use Lunar\Facades\Payments;
