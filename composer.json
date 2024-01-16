@@ -1,7 +1,7 @@
 {
     "name": "lobbesnl/lunar-paynl",
     "type": "project",
-    "description": "Pay. payment driver for Lunar.",
+    "description": "Pay.nl payment driver for Lunar.",
     "keywords": ["lunarphp", "laravel", "ecommerce", "e-commerce", "headless", "store", "shop", "cart", "pay."],
     "license": "MIT",
     "authors": [
