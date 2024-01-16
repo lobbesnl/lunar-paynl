@@ -33,4 +33,13 @@ class PaynlFacade extends Facade
 
         return Paymentmethods::getList($options, $languageCode);
     }
+
+
+
+    public static function getBanks($paymentMethodId = 10): array
+    {
+        self::initPayInstance();
+
+        return Paymentmethods::getBanks($paymentMethodId);
+    }
 }
