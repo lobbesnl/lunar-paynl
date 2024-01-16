@@ -13,7 +13,7 @@ class PaynlPaymentsServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/config/paynl.php' => config_path('paynl.php'),
+            __DIR__.'/config/paynl.php' => config_path('lunar/paynl.php'),
         ]);
 
 
