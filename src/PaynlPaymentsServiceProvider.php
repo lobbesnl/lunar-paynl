@@ -20,7 +20,7 @@ class PaynlPaymentsServiceProvider extends ServiceProvider
         PaynlFacade::initPayInstance();
 
         Route::group([], function() {
-            require __DIR__ . '/../routes/web.php';
+            require __DIR__ . '/routes/web.php';
         });
     }
 }
