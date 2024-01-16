@@ -1,0 +1,53 @@
+{
+    "name": "lobbesnl/lunar-paynl",
+    "type": "project",
+    "description": "Pay. payment driver for Lunar.",
+    "keywords": ["lunarphp", "laravel", "ecommerce", "e-commerce", "headless", "store", "shop", "cart", "pay."],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lobbes.nl",
+            "homepage": "https://www.lobbes.nl/"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "lunarphp/lunar": "^0.7",
+        "paynl/sdk": "^2.2.0",
+        "livewire/livewire": "^2.0",
+        "laravel/pint": "^1.13"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "mockery/mockery": "^1.4.4",
+        "orchestra/testbench": "^6.0|^7.0",
+        "pestphp/pest": "^1.23"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lobbesnl\\Lunar\\Paynl\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Lobbesnl\\Lunar\\Paynl\\": "tests/"
+        }
+    },
+    "extra": {
+        "lunar": {
+            "name": "Paynl Payments"
+        },
+        "laravel": {
+            "providers": [
+                "Lobbesnl\\Lunar\\Paynl\\PaynlPaymentsServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
