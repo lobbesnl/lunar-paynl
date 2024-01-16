@@ -12,6 +12,11 @@ class PaynlPaymentsServiceProvider extends ServiceProvider
 {
     public function boot()
     {
+        $this->publishes([
+            __DIR__.'/../config/paynl.php' => config_path('paynl.php'),
+        ]);
+
+
         // Register our payment type.
         Payments::extend('paynl', function($app) {
             return $app->make(PaynlPaymentType::class);
