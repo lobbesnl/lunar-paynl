@@ -53,15 +53,15 @@ You can use the `PAYNL_TEST_MODE` environment variable to switch between live an
 To start a payment:
 ```php
 <?php
-        $payment = \Lunar\Facades\Payments::driver('paynl')
-            ->cart($this->cart)
-            ->withData([
-                'description'   => 'Description',
-                'redirectRoute' => config('lunar.paynl.redirect_route'),
-                'webhookUrl'    => config('lunar.paynl.override_webhook_url') ?: route(config('lunar.paynl.webhook_route')),
-                'method'        => $paymentMethod,
-            ])
-            ->initiatePayment();
+$payment = \Lunar\Facades\Payments::driver('paynl')
+    ->cart($this->cart)
+    ->withData([
+        'description'   => 'Description',
+        'redirectRoute' => config('lunar.paynl.redirect_route'),
+        'webhookUrl'    => config('lunar.paynl.override_webhook_url') ?: route(config('lunar.paynl.webhook_route')),
+        'method'        => $paymentMethod,
+    ])
+    ->initiatePayment();
 
-        $this->redirect($payment->getRedirectUrl());
+$this->redirect($payment->getRedirectUrl());
 ```
