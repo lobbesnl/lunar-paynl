@@ -205,7 +205,7 @@ class PaynlPaymentType extends AbstractPayment
         if (($payNLTransaction->isPaid() || $payNLTransaction->isAuthorized())) {
             $this->order->placed_at = $transactionData['paymentDetails']['created'];
         }
-        $this->order->status = config('lunar.mollie.payment_status_mappings.' . $payNLTransaction->getStateName()) ? : $payNLTransaction->getStateName();
+        $this->order->status = config('lunar.paynl.payment_status_mappings.' . $payNLTransaction->getStateName()) ? : $payNLTransaction->getStateName();
         $this->order->save();
 
         return new PaymentAuthorize(success: ($payNLTransaction->isPaid() || $payNLTransaction->isAuthorized()),
