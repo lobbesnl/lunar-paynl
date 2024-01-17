@@ -46,6 +46,17 @@ class PaynlPaymentType extends AbstractPayment
         PaynlFacade::initPayInstance();
 
         // Create PayNL Transaction
+        $address        = $this->cart->addresses()->where(['type' => 'shipping']);
+        $invoiceAddress = $this->cart->addresses()->where(['type' => 'billing']);
+
+//        $payNLAddress   = [
+//                'streetName'  => $address['line_one'],
+//                // 'houseNumber' => '10',
+//                'zipCode'     => $address['line_one'],
+//                'city'        => $address['line_one'],
+//                'country'     => $address['line_one'],
+//            ];
+
         $payNLTransaction = \Paynl\Transaction::start([
             # Required
             'amount'        => 10.00,                                  // TODO: determine amount
