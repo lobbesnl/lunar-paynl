@@ -2,6 +2,7 @@
 
 namespace Lobbesnl\Lunar\Paynl;
 
+use DateTime;
 use Lobbesnl\Lunar\Paynl\Facades\PaynlFacade;
 use Lunar\Base\DataTransferObjects\PaymentAuthorize;
 use Lunar\Base\DataTransferObjects\PaymentCapture;
