@@ -145,7 +145,6 @@ class PaynlPaymentType extends AbstractPayment
         $payNLTransaction = \Paynl\Transaction::status($this->data['paymentId']);
         $transactionData  = $payNLTransaction->getData();
 
-
         $orderId = (int) $transactionData['paymentDetails']['orderNumber'];
 
         $transaction = Transaction
@@ -204,7 +203,7 @@ class PaynlPaymentType extends AbstractPayment
         //}
 
         if (($payNLTransaction->isPaid() || $payNLTransaction->isAuthorized())) {
-            $this->order->placed_at = $transactionData['stoptime'];
+            $this->order->placed_at = $transactionData['paymentDetails']['created'];
         }
         $this->order->status = config('lunar.mollie.payment_status_mappings.' . $payNLTransaction->getStateName()) ? : $payNLTransaction->getStateName();
         $this->order->save();
