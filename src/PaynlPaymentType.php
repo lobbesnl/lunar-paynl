@@ -146,7 +146,7 @@ class PaynlPaymentType extends AbstractPayment
         $transactionData  = $payNLTransaction->getData();
 
 
-        $orderId = $transactionData['extra3'];
+        $orderId = (int) $transactionData['orderNumber'];
 
         $transaction = Transaction
             ::where('reference', $this->data['paymentId'])
