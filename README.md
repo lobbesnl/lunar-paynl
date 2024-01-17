@@ -50,3 +50,18 @@ PAYNL_SERVICE_ID_TEST=
 
 You can use the `PAYNL_TEST_MODE` environment variable to switch between live and test mode.
 
+To start a payment:
+```php
+<?php
+        $payment = \Lunar\Facades\Payments::driver('paynl')
+            ->cart($this->cart)
+            ->withData([
+                'description'   => 'Description',
+                'redirectRoute' => config('lunar.paynl.redirect_route'),
+                'webhookUrl'    => config('lunar.paynl.override_webhook_url') ?: route(config('lunar.paynl.webhook_route')),
+                'method'        => $paymentMethod,
+            ])
+            ->initiatePayment();
+
+        $this->redirect($payment->getRedirectUrl());
+```
