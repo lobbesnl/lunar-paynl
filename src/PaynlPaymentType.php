@@ -82,9 +82,10 @@ class PaynlPaymentType extends AbstractPayment
             'bank'           => 1,                                      // TODO: determine bank number
             'description'    => $this->order->id,                       // TODO: determine description
             'testmode'       => config('lunar.paynl.test_mode') ? 1 : 0,
+            'orderNumber'    => $this->order->id,
             'extra1'         => 'ext1',
             'extra2'         => 'ext2',
-            'extra3'         => $this->order->id,
+            'extra3'         => 'ext3',
             'products'       => [
                 [
                     'id'    => 1,
