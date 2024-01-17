@@ -49,33 +49,43 @@ class PaynlPaymentType extends AbstractPayment
         $address        = $this->cart->shippingAddress;
         $invoiceAddress = $this->cart->billingAddress;
 
-//        $payNLAddress   = [
-//                'streetName'  => $address['line_one'],
-//                // 'houseNumber' => '10',
-//                'zipCode'     => $address['line_one'],
-//                'city'        => $address['line_one'],
-//                'country'     => $address['line_one'],
-//            ];
+        $splittedAddress = Helper::splitAddress($address->line_one);
+        $payNLAddress    = [
+            'streetName'  => $splittedAddress[0],
+            'houseNumber' => $splittedAddress[1],
+            'zipCode'     => $address->postcode,
+            'city'        => $address->city,
+            'country'     => $address->country->iso2,
+        ];
 
-        $payNLTransaction = \Paynl\Transaction::start([
+        $splittedAddress     = Helper::splitAddress($invoiceAddress->line_one);
+        $payNLInvoiceAddress = [
+            'streetName'  => $splittedAddress[0],
+            'houseNumber' => $splittedAddress[1],
+            'zipCode'     => $invoiceAddress->postcode,
+            'city'        => $invoiceAddress->city,
+            'country'     => $invoiceAddress->country->iso2,
+        ];
+
+        $transactionParameters = [
             # Required
-            'amount'        => 10.00,                                  // TODO: determine amount
-            'returnUrl'     => route(
+            'amount'         => 10.00,                                  // TODO: determine amount
+            'returnUrl'      => route(
                 $this->data['redirectRoute'],
                 ['order' => $this->order->id, 'transaction' => $transaction->id]
             ),
 
             # Optional
-            'currency'      => 'EUR',
-            'exchangeUrl'   => $this->data['webhookUrl'],
-            'paymentMethod' => 10,                                     // TODO: determine payment method
-            'bank'          => 1,                                      // TODO: determine bank number
-            'description'   => $this->order->id,                       // TODO: determine description
-            'testmode'      => config('lunar.paynl.test_mode') ? 1 : 0,
-            'extra1'        => 'ext1',
-            'extra2'        => 'ext2',
-            'extra3'        => $this->order->id,
-            'products'      => [
+            'currency'       => 'EUR',
+            'exchangeUrl'    => $this->data['webhookUrl'],
+            'paymentMethod'  => 10,                                     // TODO: determine payment method
+            'bank'           => 1,                                      // TODO: determine bank number
+            'description'    => $this->order->id,                       // TODO: determine description
+            'testmode'       => config('lunar.paynl.test_mode') ? 1 : 0,
+            'extra1'         => 'ext1',
+            'extra2'         => 'ext2',
+            'extra3'         => $this->order->id,
+            'products'       => [
                 [
                     'id'    => 1,
                     'name'  => 'een product',
@@ -91,11 +101,11 @@ class PaynlPaymentType extends AbstractPayment
                     'qty'   => 1,
                 ],
             ],
-            'language'      => 'EN',
-            'ipaddress'     => Helper::getIp(),
-            'invoiceDate'   => new DateTime(),
-            'deliveryDate'  => new DateTime(),
-            'enduser'       => [
+            'language'       => 'EN',
+            'ipaddress'      => Helper::getIp(),
+            'invoiceDate'    => new DateTime(),
+            'deliveryDate'   => new DateTime(),
+            'enduser'        => [
                 // 'initials'     => 'T',
                 'lastName'     => 'Test',
                 // 'gender'       => 'M',
@@ -103,23 +113,12 @@ class PaynlPaymentType extends AbstractPayment
                 // 'phoneNumber'  => '0612345678',
                 'emailAddress' => 'test@test.nl',
             ],
-            'address'       => [
-                'streetName'  => 'Test',
-                'houseNumber' => '10',
-                'zipCode'     => '1234AB',
-                'city'        => 'Test',
-                'country'     => 'NL',
-            ],
-            //            'invoiceAddress' => [
-            //                'initials'    => 'IT',
-            //                'lastName'    => 'ITEST',
-            //                'streetName'  => 'Istreet',
-            //                'houseNumber' => '70',
-            //                'zipCode'     => '5678CD',
-            //                'city'        => 'ITest',
-            //                'country'     => 'NL',
-            //            ],
-        ]);
+            'address'        => $payNLAddress,
+            'invoiceAddress' => $payNLInvoiceAddress,
+        ];
+
+
+        $payNLTransaction = \Paynl\Transaction::start($transactionParameters);
 
         $transaction->update([
             'reference' => $payNLTransaction->getTransactionId(),
