@@ -14,8 +14,7 @@ class PaynlPaymentsServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/config/paynl.php' => config_path('lunar/paynl.php'),
-        ]);
-
+        ], 'lunar.paynl.config');
 
         // Register our payment type.
         Payments::extend('paynl', function($app) {
