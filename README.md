@@ -14,7 +14,7 @@ composer require lobbesnl/lunar-paynl:dev-main
 This will publish the configuration under `config/lunar/paynl.php`.
 
 ```bash
-php artisan vendor:publish --provider="Lobbesnl\Lunar\Paynl\PaynlPaymentsServiceProvider"
+php artisan vendor:publish --tag=lunar.paynl.config
 ```
 
 ### Enable the driver
