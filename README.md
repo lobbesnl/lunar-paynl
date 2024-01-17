@@ -64,5 +64,5 @@ $payment = \Lunar\Facades\Payments::driver('paynl')
     ])
     ->initiatePayment();
 
-$this->redirect($payment->getRedirectUrl());
+return redirect($payment->getRedirectUrl());
 ```
