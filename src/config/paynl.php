@@ -79,11 +79,11 @@ return [
     */
 
     'payment_status_mappings' => [
-        'open'     => 'payment-open',
-        'canceled' => 'payment-canceled',
-        'pending'  => 'payment-pending',
-        'expired'  => 'payment-expired',
-        'failed'   => 'payment-failed',
-        'paid'     => 'payment-received',
+        'open'    => 'payment-open',
+        'CANCEL'  => 'payment-canceled',
+        'pending' => 'payment-pending',
+        'expired' => 'payment-expired',
+        'failed'  => 'payment-failed',
+        'PAID'    => 'payment-received',
     ],
 ];
