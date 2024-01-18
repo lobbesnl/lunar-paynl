@@ -46,8 +46,8 @@ class PaynlPaymentType extends AbstractPayment
         PaynlFacade::initPayInstance();
 
         // Create PayNL Transaction
-        $address        = $this->cart->shippingAddress;
-        $invoiceAddress = $this->cart->billingAddress;
+        $address        = $this->order->shippingAddress;
+        $invoiceAddress = $this->order->billingAddress;
 
         $splittedAddress = Helper::splitAddress($address->line_one);
         $payNLAddress    = [
@@ -67,7 +67,7 @@ class PaynlPaymentType extends AbstractPayment
             'country'     => $invoiceAddress->country->iso2,
         ];
 
-        $amount = $this->cart->total;
+        $amount = $this->cart->total->value;
         $amount = 10;
 
         $products = [];
