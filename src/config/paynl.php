@@ -67,6 +67,11 @@ return [
     'webhook_route'         => 'paynl.webhook',
     'override_webhook_url'  => env('PAYNL_WEBHOOK_URL', null),
 
+    'payment_paid_route'     => 'checkout-success.view',
+    'payment_canceled_route' => 'checkout-canceled.view',
+    'payment_open_route'     => 'checkout-open.view',
+    'payment_failed_route'   => 'checkout-failure.view',
+
 
     /*
     |--------------------------------------------------------------------------
@@ -81,7 +86,7 @@ return [
     'payment_status_mappings' => [
         'open'    => 'payment-open',
         'CANCEL'  => 'payment-canceled',
-        'pending' => 'payment-pending',
+        'PENDING' => 'payment-pending',
         'expired' => 'payment-expired',
         'failed'  => 'payment-failed',
         'PAID'    => 'payment-received',

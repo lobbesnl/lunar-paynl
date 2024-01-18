@@ -24,7 +24,9 @@ class PaynlRedirectController
 
             return match ($data['status']) {
                 'open' => redirect()->route(config('lunar.paynl.payment_open_route')),
-                'canceled' => redirect()->route(config('lunar.paynl.payment_canceled_route')),
+                'CANCEL' => redirect()->route(config('lunar.paynl.payment_canceled_route')),
+                'VERIFY' => redirect()->route(config('lunar.paynl.payment_canceled_route')),
+                'PENDING' => redirect()->route(config('lunar.paynl.payment_canceled_route')),
                 default => redirect()->route(config('lunar.paynl.payment_failed_route')),
             };
         }
