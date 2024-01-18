@@ -67,9 +67,30 @@ class PaynlPaymentType extends AbstractPayment
             'country'     => $invoiceAddress->country->iso2,
         ];
 
+        $amount = $this->cart->total;
+        $amount = 10;
+
+        $products = [];
+        $products = [
+            [
+                'id'    => 1,
+                'name'  => 'een product',
+                'price' => 5.00,
+                'tax'   => 0.87,
+                'qty'   => 1,
+            ],
+            [
+                'id'    => 2,
+                'name'  => 'ander product',
+                'price' => 5.00,
+                'tax'   => 0.87,
+                'qty'   => 1,
+            ],
+        ];
+
         $transactionParameters = [
             # Required
-            'amount'         => 10.00,                                  // TODO: determine amount
+            'amount'         => $amount,
             'returnUrl'      => route(
                 $this->data['redirectRoute'],
                 ['order' => $this->order->id, 'transaction' => $transaction->id]
@@ -78,46 +99,39 @@ class PaynlPaymentType extends AbstractPayment
             # Optional
             'currency'       => 'EUR',
             'exchangeUrl'    => $this->data['webhookUrl'],
-            'paymentMethod'  => 10,                                     // TODO: determine payment method
-            'bank'           => 1,                                      // TODO: determine bank number
-            'description'    => $this->order->id,                       // TODO: determine description
+            'paymentMethod'  => $this->data['method'],
+            'description'    => $this->data['description'],
             'testmode'       => config('lunar.paynl.test_mode') ? 1 : 0,
             'orderNumber'    => $this->order->id,
-            'extra1'         => 'ext1',
-            'extra2'         => 'ext2',
-            'extra3'         => 'ext3',
-            'products'       => [
-                [
-                    'id'    => 1,
-                    'name'  => 'een product',
-                    'price' => 5.00,
-                    'tax'   => 0.87,
-                    'qty'   => 1,
-                ],
-                [
-                    'id'    => 2,
-                    'name'  => 'ander product',
-                    'price' => 5.00,
-                    'tax'   => 0.87,
-                    'qty'   => 1,
-                ],
-            ],
+            'products'       => $products,
             'language'       => 'EN',
             'ipaddress'      => Helper::getIp(),
             'invoiceDate'    => new DateTime(),
             'deliveryDate'   => new DateTime(),
             'enduser'        => [
-                // 'initials'     => 'T',
-                'lastName'     => 'Test',
+                'initials'     => $invoiceAddress->first_name,
+                'lastName'     => $invoiceAddress->last_name,
                 // 'gender'       => 'M',
                 // 'birthDate'    => new DateTime('1990-01-10'),
-                // 'phoneNumber'  => '0612345678',
-                'emailAddress' => 'test@test.nl',
+                'phoneNumber'  => (string) $invoiceAddress->contact_phone,
+                'emailAddress' => (string) $invoiceAddress->contact_email,
             ],
             'address'        => $payNLAddress,
             'invoiceAddress' => $payNLInvoiceAddress,
         ];
 
+        if (!empty($this->data['bank'])) {
+            $transactionParameters['bank'] = $this->data['bank'];
+        }
+        if (!empty($this->data['extra1'])) {
+            $transactionParameters['extra1'] = $this->data['extra1'];
+        }
+        if (!empty($this->data['extra2'])) {
+            $transactionParameters['extra2'] = $this->data['extra2'];
+        }
+        if (!empty($this->data['extra3'])) {
+            $transactionParameters['extra3'] = $this->data['extra3'];
+        }
 
         $payNLTransaction = \Paynl\Transaction::start($transactionParameters);
 

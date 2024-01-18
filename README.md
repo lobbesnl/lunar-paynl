@@ -61,6 +61,10 @@ $payment = \Lunar\Facades\Payments::driver('paynl')
         'redirectRoute' => config('lunar.paynl.redirect_route'),
         'webhookUrl'    => config('lunar.paynl.override_webhook_url') ?: route(config('lunar.paynl.webhook_route')),
         'method'        => $paymentMethod,
+        'bank'          => $bankID, // optional
+        'extra1'        => '',      // optional
+        'extra2'        => '',      // optional
+        'extra3'        => '',      // optional
     ])
     ->initiatePayment();
 
