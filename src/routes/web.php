@@ -8,5 +8,5 @@ Route::middleware('web')->group(function() {
         ->name('paynl.redirect');
 });
 
-Route::post('paynl/webhook', [PaynlWebhookController::class, 'webhook'])
+Route::match(['GET', 'POST'], 'paynl/webhook', [PaynlWebhookController::class, 'webhook'])
     ->name('paynl.webhook');
