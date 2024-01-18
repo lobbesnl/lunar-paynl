@@ -18,6 +18,6 @@ class PaynlWebhookController
             ->withData(['paymentId' => $paymentId,])
             ->authorize();
 
-        return response(null, 200);
+        return response('TRUE|', 200);
     }
 }
