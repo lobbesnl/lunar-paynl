@@ -67,7 +67,7 @@ class PaynlPaymentType extends AbstractPayment
             'country'     => $invoiceAddress->country->iso2,
         ];
 
-        $amount = $this->cart->total->value;
+        $amount = $this->cart->total;
         $amount = 10;
 
         $products = [];
