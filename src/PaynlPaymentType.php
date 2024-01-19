@@ -10,6 +10,8 @@ use Lunar\Base\DataTransferObjects\PaymentRefund;
 use Lunar\PaymentTypes\AbstractPayment;
 use Lunar\Models\Order;
 use Lunar\Models\Transaction;
+use Paynl\Error\Api;
+use Paynl\Error\Error;
 use Paynl\Helper;
 use Paynl\Result\Transaction\Start;
 
@@ -178,7 +180,6 @@ class PaynlPaymentType extends AbstractPayment
             );
         }
 
-
         // TODO: how to deal with this?
         /*
         foreach ($payment->refunds() as $refund) {
@@ -203,15 +204,9 @@ class PaynlPaymentType extends AbstractPayment
         $transaction->update([
             'success' => ($payNLTransaction->isPaid() || $payNLTransaction->isAuthorized()),
             'status'  => $payNLTransaction->getStateName(),
+            'meta'    => $transactionData['paymentDetails'],
             // 'notes'     => $payment->description,
-            //            'card_type' => $payNLTransaction->get$payment->method ?? '',
-            //            'meta'      => [
-            //                'method'      => $payment->method,
-            //                'locale'      => $payment->locale,
-            //                'details'     => $payment->details,
-            //                'links'       => $payment->_links,
-            //                'countryCode' => $payment->countryCode,
-            //            ],
+            // 'card_type' => $payNLTransaction->get$payment->method ?? '',
         ]);
         //}
 
@@ -229,11 +224,45 @@ class PaynlPaymentType extends AbstractPayment
 
     public function capture(Transaction $transaction, $amount = 0): PaymentCapture
     {
+        //Not applicable for Pay.
+        return new PaymentCapture(success: true);
     }
 
 
 
     public function refund(Transaction $transaction, int $amount = 0, $notes = null): PaymentRefund
     {
+        try {
+            $refund = \Paynl\Transaction::refund(
+                $transaction->reference,
+                $amount,
+                $notes ?? 'Refund for order ' . $transaction->order->reference
+            );
+        } catch (Api|Error $e) {
+            return new PaymentRefund(
+                success: false,
+                message: $e->getMessage()
+            );
+        }
+
+        $resultData = $refund->getData();
+        while ($refundedTransaction = $refund->getRefundedTransaction()) {
+            $refundedAmount = (isset($refundedTransaction['refundAmount'])) ? $refundedTransaction['refundAmount'] : 0;
+            $refundID       = (isset($refundedTransaction['refundId'])) ? $refundedTransaction['refundId'] : '';
+            $arr = [
+                'success'   => $resultData['request']['result'] == '1',
+                'type'      => 'refund',
+                'driver'    => 'paynl',
+                'amount'    => $refundedAmount / pow(10, $transaction->order->currency->decimal_places),
+                'reference' => $refundID,
+                'status'    => $resultData['request']['result'],
+                'notes'     => $refund->getDescription(),
+            ];
+            $transaction->order->transactions()->create($arr);
+        }
+
+        return new PaymentRefund(
+            success: true
+        );
     }
 }
