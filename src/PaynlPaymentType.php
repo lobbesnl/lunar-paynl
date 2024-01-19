@@ -180,18 +180,35 @@ class PaynlPaymentType extends AbstractPayment
             );
         }
 
-        // TODO: how to deal with this?
-        /*
-        foreach ($payment->refunds() as $refund) {
-            $transaction = $this->order->refunds->where('reference', $refund->id)->first();
-            if ($transaction) {
-                $transaction->update([
-                    'status' => $refund->status,
+        if ($payNLTransaction->isRefunded()) {
+            // This is a refund callback
+            $refundTransaction = $this->order->refunds->where('reference', 'R:' . $this->data['paymentId'])->first();
+
+            if (empty($refundTransaction)) {
+                $refundTransaction = $this->order->refunds()->create([
+                    'success'   => $payNLTransaction->isRefunded(),
+                    'type'      => 'refund',
+                    'driver'    => 'paynl',
+                    'reference' => 'R:' . $this->data['paymentId'],
+                    'notes'     => $payNLTransaction->getDescription(),
+                    'card_type' => '',
                 ]);
             }
-        }
-        */
 
+            $refundTransaction->update([
+                'amount'  => $payNLTransaction->getAmountRefund(),
+                'success' => ($payNLTransaction->isRefunded()),
+                'status'  => $payNLTransaction->getStateName(),
+                'meta'    => $payNLTransaction->getData(),
+            ]);
+
+            return new PaymentAuthorize(
+                success: $payNLTransaction->isRefunded(),
+                message: json_encode(['status' => $payNLTransaction->getStateName()])
+            );
+        }
+
+        // Handle payment authorization
         if ($this->order->placed_at) {
             return new PaymentAuthorize(
                 success: true,
@@ -199,16 +216,11 @@ class PaynlPaymentType extends AbstractPayment
             );
         }
 
-        // TODO: refunds?
-        // if (is_null($payment->amountRefunded) || $payment->amountRefunded->value === '0.00') {
         $transaction->update([
             'success' => ($payNLTransaction->isPaid() || $payNLTransaction->isAuthorized()),
             'status'  => $payNLTransaction->getStateName(),
             'meta'    => $transactionData['paymentDetails'],
-            // 'notes'     => $payment->description,
-            // 'card_type' => $payNLTransaction->get$payment->method ?? '',
         ]);
-        //}
 
         if (($payNLTransaction->isPaid() || $payNLTransaction->isAuthorized())) {
             $this->order->placed_at = $transactionData['paymentDetails']['created'];
@@ -246,12 +258,12 @@ class PaynlPaymentType extends AbstractPayment
         }
 
         $resultData = $refund->getData();
-        $arr = [
+        $arr        = [
             'success'   => $resultData['request']['result'] == '1',
             'type'      => 'refund',
             'driver'    => 'paynl',
             'amount'    => $refund->getRefundAmount() / pow(10, $transaction->order->currency->decimal_places),
-            'reference' => $refund->getRefundId(),
+            'reference' => 'R:' . $transaction->reference,
             'status'    => $resultData['request']['result'],
             'notes'     => $refund->getDescription(),
             'card_type' => '',
