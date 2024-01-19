@@ -201,7 +201,7 @@ class PaynlPaymentType extends AbstractPayment
                 'amount'  => $payNLTransaction->getAmountRefund(),
                 'success' => ($payNLTransaction->isRefunded()),
                 'status'  => $payNLTransaction->getStateName(),
-                'meta'    => $payNLTransaction->getData(),
+                'meta'    => $transactionData['paymentDetails'],
             ]);
 
             return new PaymentAuthorize(
