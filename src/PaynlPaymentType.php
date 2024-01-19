@@ -246,21 +246,17 @@ class PaynlPaymentType extends AbstractPayment
         }
 
         $resultData = $refund->getData();
-        while ($refundedTransaction = $refund->getRefundedTransaction()) {
-            $refundedAmount = (isset($refundedTransaction['refundAmount'])) ? $refundedTransaction['refundAmount'] : 0;
-            $refundID       = (isset($refundedTransaction['refundId'])) ? $refundedTransaction['refundId'] : '';
-            $arr = [
-                'success'   => $resultData['request']['result'] == '1',
-                'type'      => 'refund',
-                'driver'    => 'paynl',
-                'amount'    => $refundedAmount / pow(10, $transaction->order->currency->decimal_places),
-                'reference' => $refund->getRefundId(),
-                'status'    => $resultData['request']['result'],
-                'notes'     => $refund->getDescription(),
-                'card_type' => '',
-            ];
-            $transaction->order->transactions()->create($arr);
-        }
+        $arr = [
+            'success'   => $resultData['request']['result'] == '1',
+            'type'      => 'refund',
+            'driver'    => 'paynl',
+            'amount'    => $refund->getAmount() / pow(10, $transaction->order->currency->decimal_places),
+            'reference' => $refund->getRefundId(),
+            'status'    => $resultData['request']['result'],
+            'notes'     => $refund->getDescription(),
+            'card_type' => '',
+        ];
+        $transaction->order->transactions()->create($arr);
 
         return new PaymentRefund(
             success: true
