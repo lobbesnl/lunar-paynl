@@ -67,7 +67,7 @@ class PaynlPaymentType extends AbstractPayment
             'country'     => $invoiceAddress->country->iso2,
         ];
 
-        $amount = $this->cart->total;
+        $amount = $this->order->total;
         $amount = 10;
 
         $products = [];
@@ -97,14 +97,14 @@ class PaynlPaymentType extends AbstractPayment
             ),
 
             # Optional
-            'currency'       => 'EUR',
+            'currency'       => $this->order->currency->code,
             'exchangeUrl'    => $this->data['webhookUrl'],
             'paymentMethod'  => $this->data['method'],
             'description'    => $this->data['description'],
             'testmode'       => config('lunar.paynl.test_mode') ? 1 : 0,
             'orderNumber'    => $this->order->id,
             'products'       => $products,
-            'language'       => 'EN',
+            'language'       => app()->getLocale(),
             'ipaddress'      => Helper::getIp(),
             'invoiceDate'    => new DateTime(),
             'deliveryDate'   => new DateTime(),
@@ -161,8 +161,7 @@ class PaynlPaymentType extends AbstractPayment
 
         $orderId = (int) $transactionData['paymentDetails']['orderNumber'];
 
-        $transaction = Transaction
-            ::where('reference', $this->data['paymentId'])
+        $transaction = Transaction::where('reference', $this->data['paymentId'])
             ->where('order_id', $orderId)
             ->where('driver', 'paynl')
             ->first();
