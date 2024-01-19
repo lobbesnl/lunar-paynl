@@ -192,6 +192,7 @@ class PaynlPaymentType extends AbstractPayment
                     'reference' => 'R:' . $this->data['paymentId'],
                     'notes'     => $payNLTransaction->getDescription(),
                     'amount'    => $payNLTransaction->getAmountRefund(),
+                    'status'    => $payNLTransaction->getStateName(),
                     'card_type' => '',
                 ]);
             }
