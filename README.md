@@ -50,7 +50,19 @@ PAYNL_SERVICE_ID_TEST=
 
 You can use the `PAYNL_TEST_MODE` environment variable to switch between live and test mode.
 
+### create named routes for success and cancellation pages
+When the user returns form the payment provider webpage, a redirect will be generated, based on the result of the payment.
+Therefore there have to be four named routed, as defined in the config. 
 
+```php
+<?php
+'payment_paid_route'     => 'checkout-success.view',
+'payment_canceled_route' => 'checkout-canceled.view',
+'payment_open_route'     => 'checkout-open.view',
+'payment_failed_route'   => 'checkout-failure.view',
+```
+
+### Example
 To start a payment:
 ```php
 <?php
