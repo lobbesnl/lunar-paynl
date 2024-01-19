@@ -181,7 +181,7 @@ class PaynlPaymentType extends AbstractPayment
         }
 
         if ($payNLTransaction->isRefunded()) {
-            // This is a refund callback
+            // Handle refund authorization
             $refundTransaction = $this->order->refunds->where('reference', 'R:' . $this->data['paymentId'])->first();
 
             if (empty($refundTransaction)) {
@@ -260,7 +260,8 @@ class PaynlPaymentType extends AbstractPayment
         }
 
         $resultData = $refund->getData();
-        $arr        = [
+
+        $refundDetails = [
             'success'   => $resultData['request']['result'] == '1',
             'type'      => 'refund',
             'driver'    => 'paynl',
@@ -270,7 +271,15 @@ class PaynlPaymentType extends AbstractPayment
             'notes'     => $refund->getDescription(),
             'card_type' => '',
         ];
-        $transaction->order->transactions()->create($arr);
+
+        // Create refund? Only one refund per transaction is allowed
+        $refundTransaction = $transaction->order->refunds->where('reference', 'R:' . $transaction->reference)->first();
+
+        if (empty($refundTransaction)) {
+            $transaction->order->refunds()->create($refundDetails);
+        } else {
+            $refundTransaction->update($refundDetails);
+        }
 
         return new PaymentRefund(
             success: true
