@@ -250,7 +250,7 @@ class PaynlPaymentType extends AbstractPayment
             'success'   => $resultData['request']['result'] == '1',
             'type'      => 'refund',
             'driver'    => 'paynl',
-            'amount'    => $refund->getAmount() / pow(10, $transaction->order->currency->decimal_places),
+            'amount'    => $refund->getRefundAmount() / pow(10, $transaction->order->currency->decimal_places),
             'reference' => $refund->getRefundId(),
             'status'    => $resultData['request']['result'],
             'notes'     => $refund->getDescription(),
