@@ -69,8 +69,6 @@ class PaynlPaymentType extends AbstractPayment
             'country'     => $invoiceAddress->country->iso2,
         ];
 
-        $amount = $this->order->total;
-
         $products = [];
         $lineID   = 1;
         foreach ($this->order->productLines as $productLine) {
@@ -88,7 +86,7 @@ class PaynlPaymentType extends AbstractPayment
 
         foreach ($this->order->shippingLines as $shippingLine) {
             $products[] = [
-                'id'            => $lineID,
+                'id'            => $shippingLine->identifier,
                 'name'          => $shippingLine->description,
                 'price'         => $shippingLine->unit_price->value,
                 'vatPercentage' => $shippingLine->tax_breakdown->amounts->sum('percentage'),
@@ -101,7 +99,7 @@ class PaynlPaymentType extends AbstractPayment
 
         $transactionParameters = [
             # Required
-            'amount'         => $amount,
+            'amount'         => $this->order->total->value,
             'returnUrl'      => route(
                 $this->data['redirectRoute'],
                 ['order' => $this->order->id, 'transaction' => $transaction->id]
