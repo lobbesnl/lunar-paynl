@@ -75,7 +75,7 @@ class PaynlPaymentType extends AbstractPayment
         $lineID   = 1;
         foreach ($this->order->productLines as $productLine) {
             $products[] = [
-                'id'            => $lineID,
+                'id'            => $productLine->identifier,
                 'name'          => $productLine->description,
                 'price'         => $productLine->unit_price,
                 'vatPercentage' => $productLine->tax_breakdown->amounts->sum('percentage'),
