@@ -77,7 +77,7 @@ class PaynlPaymentType extends AbstractPayment
             $products[] = [
                 'id'            => $productLine->identifier,
                 'name'          => $productLine->description,
-                'price'         => $productLine->unit_price,
+                'price'         => $productLine->unit_price->value,
                 'vatPercentage' => $productLine->tax_breakdown->amounts->sum('percentage'),
                 'qty'           => $productLine->quantity,
                 'type'          => 'ARTICLE',
@@ -90,7 +90,7 @@ class PaynlPaymentType extends AbstractPayment
             $products[] = [
                 'id'            => $lineID,
                 'name'          => $shippingLine->description,
-                'price'         => $shippingLine->unit_price,
+                'price'         => $shippingLine->unit_price->value,
                 'vatPercentage' => $shippingLine->tax_breakdown->amounts->sum('percentage'),
                 'qty'           => $shippingLine->quantity,
                 'type'          => 'SHIPPING',
