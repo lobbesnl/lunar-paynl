@@ -70,7 +70,6 @@ class PaynlPaymentType extends AbstractPayment
         ];
 
         $amount = $this->order->total;
-        $amount = 10;
 
         $products = [];
         $products = [
@@ -89,6 +88,19 @@ class PaynlPaymentType extends AbstractPayment
                 'qty'   => 1,
             ],
         ];
+
+        $lineID = 1;
+        foreach ($this->order->lines() as $orderLine) {
+            $products[] = [
+                'id'    => $lineID,
+                'name'  => 'een product',
+                'price' => 5.00,
+                'tax'   => 0.87,
+                'qty'   => 1,
+            ];
+
+            $lineID++;
+        }
 
         $transactionParameters = [
             # Required
