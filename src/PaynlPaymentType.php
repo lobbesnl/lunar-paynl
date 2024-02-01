@@ -39,7 +39,7 @@ class PaynlPaymentType extends AbstractPayment
             'driver'    => 'paynl',
             'order_id'  => $this->order->id,
             'type'      => 'capture',
-            'amount'    => $this->order->total,
+            'amount'    => $this->order->total / 100,
             'reference' => '',
             'status'    => '',
             'card_type' => '',
@@ -75,7 +75,7 @@ class PaynlPaymentType extends AbstractPayment
             $products[] = [
                 'id'            => $productLine->identifier,
                 'name'          => $productLine->description,
-                'price'         => $productLine->unit_price->value,
+                'price'         => $productLine->unit_price->value / 100,
                 'vatPercentage' => $productLine->tax_breakdown->amounts->sum('percentage'),
                 'qty'           => $productLine->quantity,
                 'type'          => 'ARTICLE',
@@ -88,7 +88,7 @@ class PaynlPaymentType extends AbstractPayment
             $products[] = [
                 'id'            => $shippingLine->identifier,
                 'name'          => $shippingLine->description,
-                'price'         => $shippingLine->unit_price->value,
+                'price'         => $shippingLine->unit_price->value / 100,
                 'vatPercentage' => $shippingLine->tax_breakdown->amounts->sum('percentage'),
                 'qty'           => $shippingLine->quantity,
                 'type'          => 'SHIPPING',
