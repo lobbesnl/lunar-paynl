@@ -39,7 +39,7 @@ class PaynlPaymentType extends AbstractPayment
             'driver'    => 'paynl',
             'order_id'  => $this->order->id,
             'type'      => 'capture',
-            'amount'    => $this->order->total / 100,
+            'amount'    => $this->order->total,
             'reference' => '',
             'status'    => '',
             'card_type' => '',
