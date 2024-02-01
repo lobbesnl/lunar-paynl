@@ -101,7 +101,7 @@ class PaynlPaymentType extends AbstractPayment
 
         $transactionParameters = [
             # Required
-            'amount'         => $this->order->total->value,
+            'amount'         => $this->order->total->value / 100,
             'returnUrl'      => route(
                 $this->data['redirectRoute'],
                 ['order' => $this->order->id, 'transaction' => $transaction->id]
