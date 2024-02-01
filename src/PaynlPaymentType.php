@@ -72,7 +72,7 @@ class PaynlPaymentType extends AbstractPayment
         $products = [];
         $lineID   = 1;
         foreach ($this->order->productLines as $productLine) {
-            $productPrice = ($productLine->total / $productLine->quantity) / 100;
+            $productPrice = ($productLine->total->value / $productLine->quantity) / 100;
             $products[]   = [
                 'id'            => $productLine->identifier,
                 'name'          => $productLine->description,
@@ -86,7 +86,7 @@ class PaynlPaymentType extends AbstractPayment
         }
 
         foreach ($this->order->shippingLines as $shippingLine) {
-            $shippingPrice = ($shippingLine->total / $shippingLine->quantity) / 100;
+            $shippingPrice = ($shippingLine->total->value / $shippingLine->quantity) / 100;
             $products[]    = [
                 'id'            => $shippingLine->identifier,
                 'name'          => $shippingLine->description,
